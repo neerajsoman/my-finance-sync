@@ -2,8 +2,8 @@ name: Daily Bank Sync
 
 on:
   schedule:
-    - cron: '0 14 * * *' # Runs daily at 2 PM UTC (7 AM PT)
-  workflow_dispatch:      # Allows you to run it manually for testing
+    - cron: '0 14 * * *' # 7 AM PT
+  workflow_dispatch:      # Allows manual testing
 
 jobs:
   sync:
@@ -21,11 +21,12 @@ jobs:
       - name: Install Sheetlink CLI
         run: npm install -g sheetlink
 
-      - name: Run Sheetlink Sync
+      - name: Authenticate and Sync
         env:
           SHEETLINK_API_KEY: ${{ secrets.SHEETLINK_API_KEY }}
         run: |
-          # Use the sync command to push to your connected Google Sheet
-          # If 'sheets' isn't recognized as an output, the CLI usually 
-          # relies on the "Connections" you set up in the Sheetlink Dashboard.
-          sheetlink sync --push
+          # 1. Authenticate the CLI for this headless session
+          sheetlink auth --api-key $SHEETLINK_API_KEY
+          
+          # 2. Run the sync (defaults to your linked Google Sheet in MAX)
+          sheetlink sync
