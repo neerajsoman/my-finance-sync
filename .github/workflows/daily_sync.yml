@@ -1,0 +1,29 @@
+name: Daily Bank Sync
+
+on:
+  schedule:
+    - cron: '0 14 * * *' # Runs daily at 2 PM UTC (7 AM PT)
+  workflow_dispatch:      # Allows you to run it manually for testing
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Sheetlink CLI
+        run: npm install -g sheetlink
+
+      - name: Run Sheetlink Sync
+        env:
+          SHEETLINK_API_KEY: ${{ secrets.SHEETLINK_API_KEY }}
+        run: |
+          # The CLI will use the environment variable for auth
+          sheetlink sync --output sheets
