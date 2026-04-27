@@ -25,5 +25,7 @@ jobs:
         env:
           SHEETLINK_API_KEY: ${{ secrets.SHEETLINK_API_KEY }}
         run: |
-          # The CLI will use the environment variable for auth
-          sheetlink sync --output sheets
+          # Use the sync command to push to your connected Google Sheet
+          # If 'sheets' isn't recognized as an output, the CLI usually 
+          # relies on the "Connections" you set up in the Sheetlink Dashboard.
+          sheetlink sync --push
